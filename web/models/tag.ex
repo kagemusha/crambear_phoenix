@@ -1,5 +1,6 @@
 defmodule CrambearPhoenix.Tag do
   use CrambearPhoenix.Web, :model
+  alias CrambearPhoenix.Cardset
   alias CrambearPhoenix.Card
 
   schema "tags" do
