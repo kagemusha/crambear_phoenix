@@ -38,5 +38,6 @@ defmodule CrambearPhoenix.Endpoint do
     key: "_crambear_phoenix_key",
     signing_salt: "ziOukV7K"
 
+  plug CORSPlug
   plug CrambearPhoenix.Router
 end
