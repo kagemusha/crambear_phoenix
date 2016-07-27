@@ -19,8 +19,8 @@ defmodule CrambearPhoenix.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", CrambearPhoenix do
-  #   pipe_through :api
-  # end
+  scope "/api", CrambearPhoenix do
+    pipe_through :api
+   resources "/cardsets", Api.CardsetController
+  end
 end
