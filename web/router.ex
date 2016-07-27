@@ -10,7 +10,9 @@ defmodule CrambearPhoenix.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json-api"]
+    plug JaSerializer.ContentTypeNegotiation
+    plug JaSerializer.Deserializer
   end
 
   scope "/", CrambearPhoenix do
@@ -18,6 +20,7 @@ defmodule CrambearPhoenix.Router do
 
     get "/", PageController, :index
   end
+
 
   scope "/api", CrambearPhoenix do
     pipe_through :api
