@@ -55,5 +55,11 @@ ember_cards = [
   ["What functions do you need to override to create a custom adapter?", "findRecord, createRecord, updateRecord, deleteRecord, findAll, query (and may want to override findMany for optimizations)"],
 ]
   
-                  
+phoenix_cards = [
+  ["What language does Phoenix use","Phoenix"],
+  ["What package does Phoenix use to access databases","ecto"],
+  ["What does Phoenix use for push","channels"],
+]
+
 Seeds.add_cardset "ember",  ember_cards
+Seeds.add_cardset "phoenix",  phoenix_cards
