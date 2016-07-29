@@ -17,8 +17,8 @@ defmodule Seeds do
   alias CrambearPhoenix.Tag
 
   def add_cardset(name,  cards) do
-
-    cardset = Repo.insert!(%Cardset{name: name })
+    public = true   #if no user , public true
+    cardset = Repo.insert!(%Cardset{name: name, public: public, card_count: length(cards) })
 
     for card_attrs <- cards do
       card_struct = case card_attrs do

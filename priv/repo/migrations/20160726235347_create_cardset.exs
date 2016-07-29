@@ -6,6 +6,7 @@ defmodule CrambearPhoenix.Repo.Migrations.CreateCardset do
       add :user_id, references(:users)
       add :name, :string
       add :public, :boolean, default: false
+      add :card_count, :integer, default: 0
 
       timestamps
     end

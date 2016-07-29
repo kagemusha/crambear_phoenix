@@ -1,12 +1,17 @@
 defmodule CrambearPhoenix.Api.CardsetView do
   use CrambearPhoenix.Web, :view
 
-  def render("index.json", %{cardsets: cardsets}) do
-    %{cardsets: Enum.map(cardsets, &( %{
-          id: &1.id,
-          name: &1.name,
-        }
-    ))}
+  has_many :cards, serializer: CrambearPhoenix.Api.CardView
+#  has_many :tags, serializer: CrambearPhoenix.TagView
+
+  attributes [:name, :inserted_at, :updated_at]
+
+  def cards(struct, conn) do
+    case struct.cards do
+      %Ecto.Association.NotLoaded{} ->
+        []
+      other -> other
+    end
   end
 
 end

@@ -8,6 +8,7 @@ defmodule CrambearPhoenix.Cardset do
     has_many :tags, Tag
     field :name, :string
     field :public, :boolean, default: false
+    field :card_count, :integer, default: 0
 
     timestamps
   end

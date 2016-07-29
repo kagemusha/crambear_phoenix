@@ -25,5 +25,6 @@ defmodule CrambearPhoenix.Router do
   scope "/api", CrambearPhoenix do
     pipe_through :api
    resources "/cardsets", Api.CardsetController
+   resources "/cards", Api.CardController
   end
 end

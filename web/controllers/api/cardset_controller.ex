@@ -2,46 +2,49 @@ defmodule CrambearPhoenix.Api.CardsetController do
   use CrambearPhoenix.Web, :controller
 
   alias CrambearPhoenix.Cardset
+  alias JaSerializer.Params
 
-  plug :scrub_params, "cardset" when action in [:create, :update]
+  plug :scrub_params, "data" when action in [:create, :update]
 
   def index(conn, _params) do
-    cardsets = Repo.all(Cardset)
-    render(conn, "index.json", cardsets: cardsets)
+    cardset = Repo.all(Cardset)
+    render(conn, "index.json-api", data: cardset)
   end
 
-  def create(conn, %{"cardset" => cardset_params}) do
-    changeset = Cardset.changeset(%Cardset{}, cardset_params)
+  def create(conn, %{"data" => data = %{"type" => "cardset", "attributes" => _cardset_params}}) do
+    changeset = Cardset.changeset(%Cardset{}, Params.to_attributes(data))
 
     case Repo.insert(changeset) do
       {:ok, cardset} ->
         conn
         |> put_status(:created)
         |> put_resp_header("location", cardset_path(conn, :show, cardset))
-        |> render("show.json", cardset: cardset)
+        |> render("show.json-api", data: cardset)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(CrambearPhoenix.ChangesetView, "error.json", changeset: changeset)
+        |> render(CrambearPhoenix.ChangesetView, "error.json-api", changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     cardset = Repo.get!(Cardset, id)
-    render(conn, "show.json", cardset: cardset)
+              |> Repo.preload :cards
+
+    render(conn, "show.json-api", data: cardset)
   end
 
-  def update(conn, %{"id" => id, "cardset" => cardset_params}) do
+  def update(conn, %{"id" => id, "data" => data = %{"type" => "cardset", "attributes" => _cardset_params}}) do
     cardset = Repo.get!(Cardset, id)
-    changeset = Cardset.changeset(cardset, cardset_params)
+    changeset = Cardset.changeset(cardset, Params.to_attributes(data))
 
     case Repo.update(changeset) do
       {:ok, cardset} ->
-        render(conn, "show.json", cardset: cardset)
+        render(conn, "show.json-api", data: cardset)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(CrambearPhoenix.ChangesetView, "error.json", changeset: changeset)
+        |> render(CrambearPhoenix.ChangesetView, "error.json-api", changeset: changeset)
     end
   end
 
@@ -54,4 +57,5 @@ defmodule CrambearPhoenix.Api.CardsetController do
 
     send_resp(conn, :no_content, "")
   end
+
 end
