@@ -1,6 +1,7 @@
 import Ecto.Queryable
 import Ecto.Query, only: [from: 1, from: 2]
 alias CrambearPhoenix.Repo
+alias CrambearPhoenix.User
 alias CrambearPhoenix.Cardset
 alias CrambearPhoenix.Card
 alias CrambearPhoenix.Tag

@@ -6,7 +6,7 @@ defmodule CrambearPhoenix.Api.CardsetView do
 
   attributes [:name, :inserted_at, :updated_at]
 
-  def cards(struct, conn) do
+  def cards(struct, _conn) do
     case struct.cards do
       %Ecto.Association.NotLoaded{} ->
         []

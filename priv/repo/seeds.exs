@@ -10,11 +10,13 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 defmodule Seeds do
-  import Ecto.Query, only: [from: 1, from: 2]
+  import Ecto.Query, only: [from: 1]
   alias CrambearPhoenix.Repo
+  alias CrambearPhoenix.User
   alias CrambearPhoenix.Cardset
   alias CrambearPhoenix.Card
   alias CrambearPhoenix.Tag
+  alias Sentinel.Registrator
 
   def add_cardset(name,  cards) do
     public = true   #if no user , public true
@@ -35,16 +37,22 @@ defmodule Seeds do
     end
   end
 
-  def cleanup do
-    from(t in Tag) |> Repo.delete_all
-    from(c in Card) |> Repo.delete_all
-    from(cs in Cardset) |> Repo.delete_all
+  def create_user(email, password) do
+    Registrator.changeset(%{"email" => email, "password" => password})
+                          |> Repo.insert
   end
+
+  def cleanup(types_to_cleanup) do
+    Enum.each(types_to_cleanup, &(from(item in &1) |> Repo.delete_all))
+  end
+
 end
 
 IO.puts "Seeding...."
 
-Seeds.cleanup
+Seeds.cleanup ["cardsets", "cards", "tags", "users"]
+
+test_user = Seeds.create_user("t@t.com", "tester")
   
 ember_cards = [
   ["How would you make a computed property dependent on the 'count' attribute on an array pointed to by property 'items?'","Ember.computed('items.@each.count', ...)"],

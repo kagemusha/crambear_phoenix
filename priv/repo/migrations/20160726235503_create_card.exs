@@ -3,7 +3,7 @@ defmodule CrambearPhoenix.Repo.Migrations.CreateCard do
 
   def change do
     create table(:cards) do
-      add :cardset_id, references(:cardsets)
+      add :cardset_id, references(:cardsets, on_delete: :delete_all)
       add :front, :string
       add :back, :string
 

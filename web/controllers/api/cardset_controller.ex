@@ -29,7 +29,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
 
   def show(conn, %{"id" => id}) do
     cardset = Repo.get!(Cardset, id)
-              |> Repo.preload :cards
+              |> Repo.preload(:cards)
 
     render(conn, "show.json-api", data: cardset)
   end

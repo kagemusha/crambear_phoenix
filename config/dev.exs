@@ -41,3 +41,4 @@ config :crambear_phoenix, CrambearPhoenix.Repo,
   database: "crambear_phoenix_dev",
   hostname: "localhost",
   pool_size: 10
+

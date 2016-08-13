@@ -19,7 +19,7 @@ defmodule CrambearPhoenix.Mixfile do
   def application do
     [mod: {CrambearPhoenix, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :comeonin]]
   end
 
   # Specifies which paths to compile per environment.
@@ -39,7 +39,12 @@ defmodule CrambearPhoenix.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:cors_plug, "~> 1.1.1"},
-     {:ja_serializer, "~> 0.10.1"}
+     {:ja_serializer, "~> 0.10.1"},
+     {:guardian, "~> 0.12.0"},
+     {:comeonin, "~> 2.5"},
+     {:sentinel, "~> 1.0.0"},
+     {:guardian_db, "~> 0.7.0"},
+     {:jose, "1.7.9"}
     ]
   end
 

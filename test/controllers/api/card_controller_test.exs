@@ -25,7 +25,7 @@ defmodule CrambearPhoenix.Api.CardControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    card = Repo.insert! %Card{}
+    card = Repo.insert! %Card{front: "front", back: "back"}
     conn = get conn, card_path(conn, :show, card)
     data = json_response(conn, 200)["data"]
     assert data["id"] == "#{card.id}"

@@ -1,5 +1,6 @@
 defmodule CrambearPhoenix.Router do
   use CrambearPhoenix.Web, :router
+  require Sentinel
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,9 +11,8 @@ defmodule CrambearPhoenix.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json-api"]
-    plug JaSerializer.ContentTypeNegotiation
-    plug JaSerializer.Deserializer
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug :accepts, ["json","json-api"]
   end
 
   scope "/", CrambearPhoenix do
@@ -22,9 +22,33 @@ defmodule CrambearPhoenix.Router do
   end
 
 
-  scope "/api", CrambearPhoenix do
+  # This pipeline if intended for API requests and looks for the JWT in the "Authorization" header
+  # In this case, it should be prefixed with "Bearer" so that it's looking for
+  # Authorization: Bearer <jwt>
+  pipeline :api_auth do
+    plug :accepts, ["json","json-api"]
+    plug JaSerializer.ContentTypeNegotiation
+    plug JaSerializer.Deserializer
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
+    plug Guardian.Plug.EnsureAuthenticated, %{ handler: Application.get_env(:sentinel, :auth_handler) || Sentinel.AuthHandler }
+    plug Guardian.Plug.LoadResource
+  end
+
+
+  scope "/api" do
     pipe_through :api
-   resources "/cardsets", Api.CardsetController
-   resources "/cards", Api.CardController
+    post "/sessions", CrambearPhoenix.Api.SessionController, :create
+    delete "/sessions", CrambearPhoenix.Api.SessionController, :delete
+    get "/cardsets", CrambearPhoenix.Api.CardsetController, :index
+    Sentinel.mount_api
+
+#    post "/register", Api.RegistrationController, :create
+#    post "/token", Api.SessionController, :create, as: :login
+  end
+
+  scope "/api", CrambearPhoenix do
+    pipe_through [:api_auth]
+    resources "/cardsets", Api.CardsetController
+    resources "/cards", Api.CardController
   end
 end
