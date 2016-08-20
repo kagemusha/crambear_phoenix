@@ -37,6 +37,7 @@ defmodule CrambearPhoenix.Router do
 
   scope "/api" do
     pipe_through :api
+    get "/me", CrambearPhoenix.Api.UserController, :show
     post "/sessions", CrambearPhoenix.Api.SessionController, :create
     delete "/sessions", CrambearPhoenix.Api.SessionController, :delete
     get "/cardsets", CrambearPhoenix.Api.CardsetController, :index
