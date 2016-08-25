@@ -37,14 +37,13 @@ defmodule CrambearPhoenix.Router do
 
   scope "/api" do
     pipe_through :api
+    post "/register", CrambearPhoenix.Api.RegistrationController, :create
     get "/me", CrambearPhoenix.Api.UserController, :show
     post "/sessions", CrambearPhoenix.Api.SessionController, :create
     delete "/sessions", CrambearPhoenix.Api.SessionController, :delete
     get "/cardsets", CrambearPhoenix.Api.CardsetController, :index
     Sentinel.mount_api
 
-#    post "/register", Api.RegistrationController, :create
-#    post "/token", Api.SessionController, :create, as: :login
   end
 
   scope "/api", CrambearPhoenix do
