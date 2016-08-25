@@ -4,7 +4,7 @@ defmodule CrambearPhoenix.Api.CardsetView do
   has_many :cards, serializer: CrambearPhoenix.Api.CardView
 #  has_many :tags, serializer: CrambearPhoenix.TagView
 
-  attributes [:name, :inserted_at, :updated_at]
+  attributes [:name, :card_count, :inserted_at, :updated_at]
 
   def cards(struct, _conn) do
     case struct.cards do
