@@ -21,15 +21,21 @@ defmodule CrambearPhoenix.Api.RegistrationControllerTest do
     assert Repo.get_by(User, %{email: @valid_attrs["email"]})
   end
 
-  test "does not create resource and renders errors when missing fields", %{conn: conn} do
-    assert_error_sent 422, fn ->
-      conn = post conn, registration_path(conn, :create), %{"user":  @invalid_attrs}
-    end
+  test "doesn't create resource when email or password missing", %{conn: conn} do
+    Enum.each(["email","password"], fn(key) -> test_field_missing(conn, key) end)
   end
 
-  test "does not create resource when no password", %{conn: conn} do
-    assert_error_sent 422, fn ->
-      conn = post conn, registration_path(conn, :create), %{"user":  %{"email": "m@m.com"}}
-    end
+  test "doesn't create resource when password_confirmation missing", %{conn: conn} do
+    additional_errors = [%{"password": "password field doesn't equal password_confirmation field"}]
+    test_field_missing conn, "password_confirmation", additional_errors
   end
+
+  defp test_field_missing(conn, field, additional_errors \\ []) do
+    attrs = Map.delete(@valid_attrs, field)
+    conn = post conn, registration_path(conn, :create), %{"user":  attrs}
+    assert conn.status == 422
+    errors = additional_errors ++ [ Map.put(%{}, field, "can't be blank") ]
+    assert conn.resp_body == Poison.encode!(%{errors: errors})
+  end
+
 end

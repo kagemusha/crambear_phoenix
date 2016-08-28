@@ -1,7 +1,6 @@
 defmodule CrambearPhoenix.Api.RegistrationController do
   use CrambearPhoenix.Web, :controller
 
-  alias Sentinel.UserRegistration
   alias Sentinel.Util
   alias Sentinel.UserHelper
   alias CrambearPhoenix.User
