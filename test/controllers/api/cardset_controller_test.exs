@@ -1,14 +1,14 @@
 defmodule CrambearPhoenix.Api.CardsetControllerTest do
   use CrambearPhoenix.ConnCase
 
+  import CrambearPhoenix.TestHelpers
   alias CrambearPhoenix.Cardset
-  alias CrambearPhoenix.Repo
 
   @valid_attrs %{name: "some content"}
   @invalid_attrs %{}
 
   setup do
-    conn = conn()
+    conn = build_conn()
       |> put_req_header("accept", "application/vnd.api+json")
       |> put_req_header("content-type", "application/vnd.api+json")
 
@@ -20,8 +20,14 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
+    test_attrs = %{"name" => "Elixir", "card_count" => 0}
+    insert_cardset(test_attrs)
     conn = get conn, cardset_path(conn, :index)
-    assert json_response(conn, 200)["data"] == []
+    attributes = List.first(json_response(conn, 200)["data"])["attributes"]
+    Enum.each(Map.keys(test_attrs), fn(key) ->
+      mod_key = String.replace(key, "_", "-")
+      assert attributes[mod_key] == test_attrs[key]
+    end)
   end
 
   test "shows chosen resource", %{conn: conn} do
@@ -39,6 +45,7 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
     end
   end
 
+  @tag :focus
   test "creates and renders resource when data is valid", %{conn: conn} do
     conn = post conn, cardset_path(conn, :create), %{
       "meta" => %{},

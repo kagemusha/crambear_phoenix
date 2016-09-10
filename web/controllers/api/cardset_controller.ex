@@ -1,14 +1,18 @@
 defmodule CrambearPhoenix.Api.CardsetController do
   use CrambearPhoenix.Web, :controller
+  use Guardian.Phoenix.Controller
 
   alias CrambearPhoenix.Cardset
   alias JaSerializer.Params
 
+  plug Guardian.Plug.LoadResource
+
+
   plug :scrub_params, "data" when action in [:create, :update]
 
-  def index(conn, _params) do
-    cardset = Repo.all(Cardset)
-    render(conn, "index.json-api", data: cardset)
+  def index(conn, params, current_user, token) do
+    cardsets = Repo.all(Cardset)
+    render(conn, "index.json-api", data: cardsets)
   end
 
   def create(conn, %{"data" => data = %{"type" => "cardset", "attributes" => _cardset_params}}) do
