@@ -47,17 +47,23 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
 
   @tag :focus
   test "creates and renders resource when data is valid", %{conn: conn} do
-    conn = post conn, cardset_path(conn, :create), %{
-      "meta" => %{},
-      "data" => %{
-        "type" => "cardset",
-        "attributes" => @valid_attrs,
-        "relationships" => relationships
-      }
-    }
+    user = insert_user(email = "t@t.com", password = "tester")
+    token = login_user(email, password)
+    conn = put_req_header(conn, "authorization", "Bearer #{token}")
 
-    assert json_response(conn, 201)["data"]["id"]
-    assert Repo.get_by(Cardset, @valid_attrs)
+    conn =  post conn, cardset_path(conn, :create), %{
+              "meta" => %{},
+              "data" => %{
+                "type" => "cardset",
+                "attributes" => @valid_attrs,
+              }
+            }
+    #assert Repo.get_by(Cardset, @valid_attrs).name == "My Cardset"
+    attributes = json_response(conn, 201)["data"]["attributes"]
+    Enum.each(Map.keys(@valid_attrs), fn(key) ->
+      mod_key = String.replace(key, "_", "-")
+      assert attributes[mod_key] == @valid_attrs[key]
+    end)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do

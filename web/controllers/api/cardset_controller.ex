@@ -15,14 +15,12 @@ defmodule CrambearPhoenix.Api.CardsetController do
     render(conn, "index.json-api", data: cardsets)
   end
 
-  def create(conn, %{"data" => data = %{"type" => "cardset", "attributes" => _cardset_params}}) do
-    changeset = Cardset.changeset(%Cardset{}, Params.to_attributes(data))
-
+  def create(conn, %{"data" => data = %{"attributes" => cardset_params}}, current_user, token) do
+    changeset = Ecto.build_assoc(current_user, :cardsets, to_atom_params(cardset_params))
     case Repo.insert(changeset) do
       {:ok, cardset} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", cardset_path(conn, :show, cardset))
         |> render("show.json-api", data: cardset)
       {:error, changeset} ->
         conn
@@ -52,7 +50,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id}, current_user, token) do
     cardset = Repo.get!(Cardset, id)
 
     # Here we use delete! (with a bang) because we expect

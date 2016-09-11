@@ -1,7 +1,9 @@
 defmodule CrambearPhoenix.User do
   use CrambearPhoenix.Web, :model
+  alias CrambearPhoenix.Cardset
 
   schema "users" do
+    has_many :cardsets, Cardset
     field :name, :string
     field  :email,                       :string     # or :username
     field  :role,                        :string

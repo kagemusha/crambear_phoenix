@@ -36,6 +36,9 @@ defmodule CrambearPhoenix.Web do
 
       import CrambearPhoenix.Router.Helpers
       import CrambearPhoenix.Gettext
+      def to_atom_params(params) do
+        Enum.reduce(params, %{}, fn({key, val}, acc) -> Map.put(acc, String.to_existing_atom(key), val) end)
+      end
     end
   end
 
@@ -78,4 +81,5 @@ defmodule CrambearPhoenix.Web do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+
 end
