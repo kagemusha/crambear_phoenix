@@ -4,7 +4,7 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
   import CrambearPhoenix.TestHelpers
   alias CrambearPhoenix.Cardset
 
-  @valid_attrs %{name: "some content"}
+  @valid_attrs %{"name" => "My Cardset"}
   @invalid_attrs %{}
 
   setup do
@@ -19,7 +19,7 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
     %{}
   end
 
-  test "lists all entries on index", %{conn: conn} do
+  test "gets all cardsets", %{conn: conn} do
     test_attrs = %{"name" => "Elixir", "card_count" => 0}
     insert_cardset(test_attrs)
     conn = get conn, cardset_path(conn, :index)
