@@ -10,12 +10,12 @@ defmodule CrambearPhoenix.Api.CardsetController do
 
   plug :scrub_params, "data" when action in [:create, :update]
 
-  def index(conn, params, current_user, token) do
+  def index(conn, _params, _current_user, _token) do
     cardsets = Repo.all(Cardset)
     render(conn, "index.json-api", data: cardsets)
   end
 
-  def create(conn, %{"data" => data = %{"attributes" => cardset_params}}, current_user, token) do
+  def create(conn, %{"data" => %{"attributes" => cardset_params}}, current_user, _token) do
     changeset = Ecto.build_assoc(current_user, :cardsets, to_atom_params(cardset_params))
     case Repo.insert(changeset) do
       {:ok, cardset} ->
@@ -50,7 +50,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
     end
   end
 
-  def delete(conn, %{"id" => id}, current_user, token) do
+  def delete(conn, %{"id" => id}, _current_user, _token) do
     cardset = Repo.get!(Cardset, id)
 
     # Here we use delete! (with a bang) because we expect

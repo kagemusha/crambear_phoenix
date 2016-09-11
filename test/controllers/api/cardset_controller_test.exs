@@ -47,7 +47,7 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
 
   @tag :focus
   test "creates and renders resource when data is valid", %{conn: conn} do
-    user = insert_user(email = "t@t.com", password = "tester")
+    insert_user(email = "t@t.com", password = "tester")
     token = login_user(email, password)
     conn = put_req_header(conn, "authorization", "Bearer #{token}")
 

@@ -23,7 +23,4 @@ defmodule CrambearPhoenix.Api.RegistrationController do
     end
   end
 
-  def create(_conn, _req) do
-    IO.puts "ERROR bad params in reg controller create"
-  end
 end
