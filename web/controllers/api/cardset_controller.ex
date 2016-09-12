@@ -50,14 +50,18 @@ defmodule CrambearPhoenix.Api.CardsetController do
     end
   end
 
-  def delete(conn, %{"id" => id}, _current_user, _token) do
+  def delete(conn, %{"id" => id}, current_user, _token) do
     cardset = Repo.get!(Cardset, id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
-    Repo.delete!(cardset)
-
-    send_resp(conn, :no_content, "")
+    cardset = Repo.preload cardset, :user
+    if current_user == cardset.user do
+      Repo.delete!(cardset)
+      send_resp(conn, :no_content, "")
+    else
+      send_resp(conn, :not_found, "")
+    end
   end
 
 end
