@@ -44,6 +44,7 @@ defmodule CrambearPhoenix.Mixfile do
      {:comeonin, "~> 2.5"},
      {:sentinel, "~> 1.0.0"},
      {:guardian_db, "~> 0.7.0"},
+     {:canary, "~> 1.0.0"},
      {:jose, "1.7.9"}
     ]
   end

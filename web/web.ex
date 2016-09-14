@@ -36,6 +36,9 @@ defmodule CrambearPhoenix.Web do
 
       import CrambearPhoenix.Router.Helpers
       import CrambearPhoenix.Gettext
+      import Canary.Plugs
+
+      #move this at some point
       def to_atom_params(params) do
         Enum.reduce(params, %{}, fn({key, val}, acc) -> Map.put(acc, String.to_existing_atom(key), val) end)
       end

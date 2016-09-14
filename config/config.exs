@@ -60,10 +60,11 @@ config :sentinel,
   user_view: CrambearPhoenix.Api.UserView,
   environment: :development
 
-
-
 config :guardian_db, GuardianDb,
   repo: CrambearPhoenix.Repo
+
+config :canary, repo: CrambearPhoenix.Repo
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

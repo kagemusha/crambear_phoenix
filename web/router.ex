@@ -32,6 +32,7 @@ defmodule CrambearPhoenix.Router do
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.EnsureAuthenticated, %{ handler: Application.get_env(:sentinel, :auth_handler) || Sentinel.AuthHandler }
     plug Guardian.Plug.LoadResource
+    plug CrambearPhoenix.Plug.CurrentUser
   end
 
 
