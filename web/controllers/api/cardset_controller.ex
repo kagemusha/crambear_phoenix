@@ -6,7 +6,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
   alias JaSerializer.Params
 
   plug Guardian.Plug.LoadResource
-  plug :load_and_authorize_resource, model: Cardset, except: :index
+  plug :load_and_authorize_resource, model: Cardset, except: [:index]
 
   plug :scrub_params, "data" when action in [:create, :update]
 
@@ -16,7 +16,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
   end
 
   def create(conn, %{"data" => %{"attributes" => cardset_params}}, current_user, _token) do
-    changeset = Ecto.build_assoc(current_user, :cardsets, to_atom_params(cardset_params))
+    changeset = Cardset.create_changeset(%Cardset{}, current_user, cardset_params)
     case Repo.insert(changeset) do
       {:ok, cardset} ->
         conn
@@ -25,18 +25,21 @@ defmodule CrambearPhoenix.Api.CardsetController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(CrambearPhoenix.ChangesetView, "error.json-api", changeset: changeset)
+        |> render(:errors, data: changeset)
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    cardset = Repo.get!(Cardset, id)
-              |> Repo.preload(:cards)
-
-    render(conn, "show.json-api", data: cardset)
+  def show(conn, _cardset, _current_user, _token) do
+    case conn.assigns.cardset do
+      nil ->
+        send_resp(conn, :not_found, "")
+      cardset ->
+        cardset = Repo.preload(cardset, :cards)
+        render(conn, data: cardset)
+    end
   end
 
-  def update(conn, %{"id" => id, "data" => data = %{"type" => "cardset", "attributes" => _cardset_params}}) do
+  def update(conn, %{"data" => data = %{"id"=> id, "attributes" => _cardset_params}}, current_user, token) do
     cardset = Repo.get!(Cardset, id)
     changeset = Cardset.changeset(cardset, Params.to_attributes(data))
 
@@ -46,17 +49,17 @@ defmodule CrambearPhoenix.Api.CardsetController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(CrambearPhoenix.ChangesetView, "error.json-api", changeset: changeset)
+        |> render(:errors, data: changeset)
     end
   end
 
   def delete(conn, _cardset, _current_user, _token) do
-    if conn.assigns.authorized do
-      cardset = conn.assigns.cardset
-      Repo.delete!(cardset)
-      send_resp(conn, :no_content, "")
-    else
-      send_resp(conn, :not_found, "")
+    case conn.assigns.cardset do
+      nil ->
+        send_resp(conn, :not_found, "")
+      cardset ->
+        Repo.delete!(cardset)
+        send_resp(conn, :no_content, "")
     end
   end
 

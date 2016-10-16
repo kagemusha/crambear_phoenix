@@ -24,8 +24,14 @@ defmodule CrambearPhoenix.Cardset do
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
+  def create_changeset(model, user, params \\ :empty) do
+    model = %{model | user_id: user.id}
+    |> changeset(params)
+  end
+
   def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields, @optional_fields)
+    |> validate_length(:name, min: 1)
   end
 end
