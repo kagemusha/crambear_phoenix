@@ -5,10 +5,13 @@ defimpl Canada.Can, for: CrambearPhoenix.User do
   def can?(%User{ id: user_id }, action, %Cardset{ user_id: user_id })
     when action in [:show, :delete, :update], do: true
 
+  def can?(_, action, %Cardset{ public: true })
+    when action in [:show], do: true
+
   def can?(_user, action, _)
     when action in [:show, :delete, :update], do: false
 #  def can?(%User{ id: user_id }, action, %Cardset{ user_id: user_id })
 #    when action in [:show, :delete, :update], do: true
 
-  def can?(%User{ id: user_id }, _, _), do: true
+  def can?(%User{ id: _user_id }, _, _), do: true
 end
