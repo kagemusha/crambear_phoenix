@@ -20,7 +20,7 @@ defmodule Seeds do
 
   def add_cardset(name,  cards) do
     public = true   #if no user , public true
-    cardset = Repo.insert!(%Cardset{name: name, public: public, card_count: length(cards) })
+    cardset = Repo.insert!(%Cardset{name: name, public: public })
 
     for card_attrs <- cards do
       card_struct = case card_attrs do
