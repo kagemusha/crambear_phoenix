@@ -54,6 +54,7 @@ defmodule CrambearPhoenix.Api.CardsetControllerTest do
       mod_key = String.replace(key, "_", "-")
       assert attributes[mod_key] == @valid_attrs[key]
     end)
+    assert attributes["is-mine"] == true
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do

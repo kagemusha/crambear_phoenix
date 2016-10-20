@@ -12,7 +12,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
 
   def index(conn, _params, _current_user, _token) do
     cardsets = Repo.all(Cardset)
-    render(conn, "index.json-api", data: cardsets)
+    render(conn, data: cardsets)
   end
 
   def create(conn, %{"data" => %{"attributes" => cardset_params}}, current_user, _token) do

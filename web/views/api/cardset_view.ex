@@ -7,7 +7,7 @@ defmodule CrambearPhoenix.Api.CardsetView do
     include: true
 #  has_many :tags, serializer: CrambearPhoenix.TagView
 
-  attributes [:name, :card_count, :inserted_at, :updated_at]
+  attributes [:name, :card_count, :is_mine, :inserted_at, :updated_at]
 
   def cards(struct, conn) do
     case struct.cards do
@@ -19,5 +19,8 @@ defmodule CrambearPhoenix.Api.CardsetView do
     end
   end
 
-
+  def is_mine(cardset, conn) do
+    cardset = Repo.preload cardset, :user
+    Map.has_key?(conn.assigns, :current_user) && conn.assigns.current_user == cardset.user
+  end
 end
