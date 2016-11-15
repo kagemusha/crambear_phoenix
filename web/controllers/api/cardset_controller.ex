@@ -39,7 +39,7 @@ defmodule CrambearPhoenix.Api.CardsetController do
     end
   end
 
-  def update(conn, %{"data" => data = %{"id"=> id, "attributes" => _cardset_params}}, current_user, token) do
+  def update(conn, %{"data" => data = %{"id"=> id, "attributes" => _cardset_params}}, _current_user, _token) do
     cardset = Repo.get!(Cardset, id)
     changeset = Cardset.changeset(cardset, Params.to_attributes(data))
 
