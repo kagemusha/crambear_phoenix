@@ -2,9 +2,10 @@ defmodule CrambearPhoenix.Api.CardControllerTest do
   use CrambearPhoenix.ConnCase
 
   alias CrambearPhoenix.Card
+  alias CrambearPhoenix.Cardset
   alias CrambearPhoenix.Repo
 
-  @valid_attrs %{back: "some content", front: "some content"}
+  @valid_attrs %{back: "card back", front: "card front"}
   @invalid_attrs %{}
 
   setup do
@@ -19,27 +20,23 @@ defmodule CrambearPhoenix.Api.CardControllerTest do
     %{}
   end
 
-  test "lists all entries on index", %{conn: conn} do
-    conn = get conn, card_path(conn, :index)
-    assert json_response(conn, 200)["data"] == []
-  end
+#  test "shows chosen resource", %{conn: conn} do
+#    card = Repo.insert! %Card{front: "front", back: "back"}
+#    conn = get conn, card_path(conn, :show, card)
+#    data = json_response(conn, 200)["data"]
+#    assert data["id"] == "#{card.id}"
+#    assert data["type"] == "card"
+#    assert data["attributes"]["front"] == card.front
+#    assert data["attributes"]["back"] == card.back
+#  end
 
-  test "shows chosen resource", %{conn: conn} do
-    card = Repo.insert! %Card{front: "front", back: "back"}
-    conn = get conn, card_path(conn, :show, card)
-    data = json_response(conn, 200)["data"]
-    assert data["id"] == "#{card.id}"
-    assert data["type"] == "card"
-    assert data["attributes"]["front"] == card.front
-    assert data["attributes"]["back"] == card.back
-  end
+#  test "does not show resource and instead throw error when id is nonexistent", %{conn: conn} do
+#    assert_error_sent 404, fn ->
+#      get conn, card_path(conn, :show, -1)
+#    end
+#  end
 
-  test "does not show resource and instead throw error when id is nonexistent", %{conn: conn} do
-    assert_error_sent 404, fn ->
-      get conn, card_path(conn, :show, -1)
-    end
-  end
-
+  @tag :focus
   test "creates and renders resource when data is valid", %{conn: conn} do
     conn = post conn, card_path(conn, :create), %{
       "meta" => %{},

@@ -1,20 +1,21 @@
 defmodule CrambearPhoenix.Api.CardController do
   use CrambearPhoenix.Web, :controller
+  use Guardian.Phoenix.Controller
 
   alias CrambearPhoenix.Card
   alias JaSerializer.Params
 
+  plug Guardian.Plug.LoadResource
+  plug :load_and_authorize_resource, model: Card
   plug :scrub_params, "data" when action in [:create, :update]
 
-  def index(conn, _params) do
-    cards = Repo.all(Card)
-    render(conn, "index.json-api", data: cards)
-  end
+#  def index(conn, _params) do
+#    cards = Repo.all(Card)
+#    render(conn, "index.json-api", data: cards)
+#  end
 
-  def create(conn, %{"data" => data = %{"type" => "card", "attributes" => _card_params}}) do
-    changeset = Card.changeset(%Card{}, Params.to_attributes(data))
-
-    case Repo.insert(changeset) do
+  def create(conn, %{"data" => %{"attributes" => card_params}}, current_user, _token) do
+    case Card.create(card_params)  do
       {:ok, card} ->
         conn
         |> put_status(:created)

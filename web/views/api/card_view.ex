@@ -1,7 +1,5 @@
 defmodule CrambearPhoenix.Api.CardView do
   use CrambearPhoenix.Web, :view
 
-  attributes [:front, :back, :inserted_at, :updated_at]
-  
-
+  attributes [:front, :back, :updated_at]
 end
